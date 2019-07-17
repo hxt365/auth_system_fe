@@ -1,0 +1,12 @@
+.signup-form {
+  max-width: 70rem;
+  margin: auto;
+
+  .row .ant-form-item {
+    flex: 1;
+
+    &:last-child {
+      flex: 1;
+    }
+  }
+}

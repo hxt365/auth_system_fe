@@ -1,0 +1,27 @@
+import React from 'react';
+import { Menu } from 'antd';
+import { HOME, CHANGE_PASSWORD, LOGIN } from 'constants/index';
+import { Link } from 'react-router-dom';
+
+function Navigation() {
+  return (
+    <Menu
+      theme="dark"
+      mode="horizontal"
+      defaultSelectedKeys={[HOME]}
+      style={{ lineHeight: '64px', float: 'right' }}
+    >
+      <Menu.Item key={HOME}>
+        <Link to={HOME}>Home</Link>
+      </Menu.Item>
+      <Menu.Item key={CHANGE_PASSWORD}>
+        <Link to={CHANGE_PASSWORD}>Change password</Link>
+      </Menu.Item>
+      <Menu.Item key={LOGIN}>
+        <Link to={LOGIN}>Logout</Link>
+      </Menu.Item>
+    </Menu>
+  );
+}
+
+export default Navigation;

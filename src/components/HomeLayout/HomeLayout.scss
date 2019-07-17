@@ -1,0 +1,27 @@
+.homelayout {
+  height: 100vh;
+
+  .content {
+    padding: 0 50px;
+    margin-top: 6.4rem;
+    height: 100%;
+
+    .wrapper {
+      background: #fff;
+      padding: 24;
+      height: 100%;
+    }
+  }
+
+  .logo {
+    display: inline-block;
+
+    height: 100%;
+    width: 7rem;
+
+    img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
