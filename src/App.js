@@ -1,8 +1,10 @@
 import React, { lazy } from 'react';
 import './App.scss';
-import { Spin } from 'antd';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import { HOME, LOGIN, CHANGE_PASSWORD, RESET_PASSWORD, SIGNUP } from 'constants/index';
+import { HOME, LOGIN, CHANGE_PASSWORD, RESET_PASSWORD, SIGNUP } from 'constants/route';
+import Spinner from 'components/share/Spinner';
+import AppLayout from 'components/AppLayout';
+import PrivateRoute from 'components/share/PrivateRoute';
 
 const Login = lazy(() => import('views/Login'));
 const Home = lazy(() => import('views/Home'));
@@ -13,20 +15,22 @@ const HomeLayout = lazy(() => import('components/HomeLayout'));
 
 function App() {
   return (
-    <React.Suspense fallback={<Spin size="large" />}>
-      <Switch>
-        <Route exact path={LOGIN} component={Login} />
-        <Route exact path={SIGNUP} component={Signup} />
-        <Route exact path={RESET_PASSWORD} component={ResetPassword} />
-        <HomeLayout>
-          <React.Suspense fallback={<Spin size="large" />}>
-            <Route exact path={HOME} component={Home} />
-            <Route exact path={CHANGE_PASSWORD} component={ChangePassword} />
-          </React.Suspense>
-        </HomeLayout>
-        <Redirect to={LOGIN} />
-      </Switch>
-    </React.Suspense>
+    <AppLayout>
+      <React.Suspense fallback={<Spinner />}>
+        <Switch>
+          <PrivateRoute exact path={LOGIN} component={Login} />
+          <PrivateRoute exact path={SIGNUP} component={Signup} />
+          <PrivateRoute exact path={RESET_PASSWORD} component={ResetPassword} />
+          <HomeLayout>
+            <React.Suspense fallback={<Spinner />}>
+              <PrivateRoute authRoute exact path={HOME} component={Home} />
+              <PrivateRoute authRoute exact path={CHANGE_PASSWORD} component={ChangePassword} />
+            </React.Suspense>
+          </HomeLayout>
+          <Redirect to={LOGIN} />
+        </Switch>
+      </React.Suspense>
+    </AppLayout>
   );
 }
 

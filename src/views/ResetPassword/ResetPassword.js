@@ -2,7 +2,7 @@ import React from 'react';
 import './ResetPassword.scss';
 import ResetPasswordForm from 'components/ResetPasswordForm';
 import { Link } from 'react-router-dom';
-import { LOGIN } from 'constants/index';
+import { LOGIN } from 'constants/route';
 
 function ResetPassword() {
   return (

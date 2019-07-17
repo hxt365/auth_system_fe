@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Form, Input, Icon, Button } from 'antd';
 import { Link } from 'react-router-dom';
-import { RESET_PASSWORD, SIGNUP } from 'constants/index';
+import { RESET_PASSWORD, SIGNUP } from 'constants/route';
 import './LoginForm.scss';
 
 type PropsType = {

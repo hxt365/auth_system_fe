@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { HOME, CHANGE_PASSWORD, LOGIN } from 'constants/index';
+import { HOME, CHANGE_PASSWORD, LOGIN } from 'constants/route';
 import { Link } from 'react-router-dom';
 
 function Navigation() {

@@ -2,7 +2,7 @@ import React from 'react';
 import './Signup.scss';
 import SignupForm from 'components/SignupForm';
 import { Link } from 'react-router-dom';
-import { LOGIN } from 'constants/index';
+import { LOGIN } from 'constants/route';
 
 function Signup() {
   return (
