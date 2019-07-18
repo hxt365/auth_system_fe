@@ -20,7 +20,7 @@ function ConfirmEmail({ match }: { match: any }) {
       if (res.status === 200) setConfirmed(true);
       else setConfirmed(false);
     })();
-  });
+  }, [match.params]);
 
   let view;
   if (!loaded) view = <Spinner />;

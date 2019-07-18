@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom';
 import { authServices } from 'services';
 import { LOGIN } from 'constants/route';
 
+const COUNTDOWN = parseInt(process.env.REACT_APP_COUNTDOWN, 10);
+
 type PropsType = {
   children: any,
   history: any,
@@ -60,13 +62,16 @@ function AppLayout(props: PropsType) {
           last_name: res.data.last_name,
           is_authenticated: true,
         });
-        // Auto logout user
-        setTimeout(() => {
-          setUser(initialUser);
-        }, 1750000);
       }
     })();
   }, []);
+
+  useEffect(() => {
+    // Auto logout user
+    setTimeout(() => {
+      if (user.is_authenticated) setUser(initialUser);
+    }, COUNTDOWN);
+  }, [user]);
 
   const { children } = props;
 
