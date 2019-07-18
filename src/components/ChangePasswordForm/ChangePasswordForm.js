@@ -1,9 +1,13 @@
 // @flow
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Form, Input, Button } from 'antd';
 import './ChangePasswordForm.scss';
 import { hasErrors } from 'helpers/component';
+import { AppContext } from 'components/AppLayout';
+import { SUCCESS, ERROR } from 'constants/message';
+import { authServices } from 'services';
+import { LOGIN } from 'constants/route';
 
 const formItemLayout = {
   labelCol: {
@@ -28,22 +32,38 @@ type PropsType = {
 };
 
 function ChangePasswordForm(props: PropsType) {
-  const [state, setState] = useState({
-    confirmDirty: false,
-  });
+  const state = useContext(AppContext);
+
+  const [dirty, setDirty] = useState(false);
 
   const handleSubmit = e => {
     e.preventDefault();
-    props.form.validateFields((err, values) => {
+    props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        const res = await authServices.changePassword(values);
+        if (res.status === 200) {
+          state.setMessage({
+            status: SUCCESS,
+            title: 'We changed password for you. Please log in again for security!',
+            button: 'Thank you, admin!',
+            redirect: LOGIN,
+          });
+        } else {
+          console.log(res.response.data);
+          state.setMessage({
+            status: ERROR,
+            title: res.response.data.non_field_errors,
+            button: 'Let me try again',
+            redirect: '',
+          });
+        }
       }
     });
   };
 
   const handleConfirmBlur = e => {
     const { value } = e.target;
-    setState({ confirmDirty: state.confirmDirty || !!value });
+    setDirty(dirty || !!value);
   };
 
   const compareToFirstPassword = (rule, value, callback) => {
@@ -57,7 +77,7 @@ function ChangePasswordForm(props: PropsType) {
 
   const validateToNextPassword = (rule, value, callback) => {
     const { form } = props;
-    if (value && state.confirmDirty) {
+    if (value && dirty) {
       form.validateFields(['confirm'], { force: true });
     }
     callback();
@@ -68,7 +88,7 @@ function ChangePasswordForm(props: PropsType) {
 
   return (
     <Form {...formItemLayout} onSubmit={handleSubmit} className="change-password-form">
-      <Form.Item label="Current password" hasFeedback>
+      <Form.Item label="Current password">
         {getFieldDecorator('current_password', {
           rules: [
             {

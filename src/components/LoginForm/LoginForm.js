@@ -1,22 +1,42 @@
 // @flow
 
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { Form, Input, Icon, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { RESET_PASSWORD, SIGNUP } from 'constants/route';
 import './LoginForm.scss';
+import { authServices } from 'services';
+import { AppContext } from 'components/AppLayout';
+import { ERROR } from 'constants/message';
 
 type PropsType = {
   form: any,
 };
 
 function LoginForm(props: PropsType) {
+  const state = useContext(AppContext);
+
   const handleSubmit = e => {
     e.preventDefault();
-    props.form.validateFields((err, values) => {
+    props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        const res = await authServices.login(values);
+        if (res.status === 200) {
+          state.setUser({
+            username: res.data.username,
+            first_name: res.data.first_name,
+            last_name: res.data.last_name,
+            is_authenticated: true,
+          });
+        } else {
+          state.setMessage({
+            status: ERROR,
+            title: 'Username or password is not correct!',
+            button: 'Let me try again',
+            redirect: '',
+          });
+        }
       }
     });
   };

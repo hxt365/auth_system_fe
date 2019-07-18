@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Menu } from 'antd';
 import { HOME, CHANGE_PASSWORD, LOGIN } from 'constants/route';
 import { Link } from 'react-router-dom';
+import { authServices } from 'services';
+import { AppContext } from 'components/AppLayout';
 
 function Navigation() {
+  const state = useContext(AppContext);
+
+  const logoutHandler = () => {
+    authServices.logout();
+    state.setUser({
+      username: '',
+      first_name: '',
+      last_name: '',
+      is_authenticated: false,
+    });
+  };
+
   return (
     <Menu
       theme="dark"
@@ -18,7 +32,9 @@ function Navigation() {
         <Link to={CHANGE_PASSWORD}>Change password</Link>
       </Menu.Item>
       <Menu.Item key={LOGIN}>
-        <Link to={LOGIN}>Logout</Link>
+        <Link to={LOGIN} onClick={logoutHandler}>
+          Logout
+        </Link>
       </Menu.Item>
     </Menu>
   );

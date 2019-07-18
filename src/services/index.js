@@ -1,1 +1,1 @@
-export { default as requestServices } from './requests';
+export { default as authServices } from './auth';

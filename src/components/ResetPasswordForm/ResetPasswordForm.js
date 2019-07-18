@@ -1,15 +1,21 @@
 // @flow
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Form, Icon, Button, Input } from 'antd';
 import './ResetPasswordForm.scss';
+import { authServices } from 'services';
 import { hasErrors } from 'helpers/component';
+import { AppContext } from 'components/AppLayout';
+import { SUCCESS, ERROR } from 'constants/message';
+import { HOME } from 'constants/route';
 
 type PropsType = {
   form: any,
 };
 
 function ResetPasswordForm(props: PropsType) {
+  const state = useContext(AppContext);
+
   useEffect(() => {
     props.form.validateFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -17,9 +23,24 @@ function ResetPasswordForm(props: PropsType) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    props.form.validateFields((err, values) => {
+    props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        const res = await authServices.resetPassword(values);
+        if (res.status === 200) {
+          state.setMessage({
+            status: SUCCESS,
+            title: 'Please check your mail box!',
+            button: 'Thank you, admin!',
+            redirect: HOME,
+          });
+        } else {
+          state.setMessage({
+            status: ERROR,
+            title: 'Please enter your own username and email!',
+            button: 'Let me try again',
+            redirect: '',
+          });
+        }
       }
     });
   };

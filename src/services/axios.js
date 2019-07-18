@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-export const BASE_API_URL: String = `${process.env.REACT_APP_BASE_API_URL || 'localhost:3000'}`;
+export const BASE_API_URL: String = `${process.env.REACT_APP_BASE_API_URL}`;
 
 const customAxios = axios.create({
   baseURL: BASE_API_URL,
@@ -20,4 +20,4 @@ customAxios.interceptors.response.use(
   },
 );
 
-export default { customAxios };
+export default customAxios;

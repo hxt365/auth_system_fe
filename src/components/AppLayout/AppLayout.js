@@ -1,18 +1,24 @@
 // @flow
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Result, Button } from 'antd';
 import './AppLayout.scss';
 import { SUCCESS, ERROR } from 'constants/message';
+import { withRouter } from 'react-router-dom';
+import { authServices } from 'services';
+import { LOGIN } from 'constants/route';
 
 type PropsType = {
   children: any,
+  history: any,
 };
 
 // eslint-disable-next-line no-unused-vars
 type MessageType = {
   status: SUCCESS | ERROR,
   title: String,
+  button: String,
+  redirect: Boolean,
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -20,32 +26,55 @@ type UserType = {
   username: String,
   first_name: String,
   last_name: String,
-  is_authenticated: Boolean,
+  is_authenticated: String,
 };
 
 export const AppContext = React.createContext(null);
 
-function AppLayout(props: PropsType) {
-  const [message: MessageType, setMessage] = useState({
-    status: '',
-    title: '',
-  });
+const initialMessage = {
+  status: '',
+  title: '',
+  button: '',
+  redirect: '',
+};
 
-  const [user: UserType, setUser] = useState({
-    username: '',
-    first_name: '',
-    last_name: '',
-    is_authenticated: false,
-  });
+const initialUser = {
+  username: '',
+  first_name: '',
+  last_name: '',
+  is_authenticated: '',
+};
+
+function AppLayout(props: PropsType) {
+  const [message: MessageType, setMessage] = useState(initialMessage);
+
+  const [user: UserType, setUser] = useState(initialUser);
+
+  useEffect(() => {
+    (async function IFE() {
+      const res = await authServices.refresh();
+      if (res.status === 200) {
+        setUser({
+          username: res.data.username,
+          first_name: res.data.first_name,
+          last_name: res.data.last_name,
+          is_authenticated: true,
+        });
+        // Auto logout user
+        setTimeout(() => {
+          setUser(initialUser);
+        }, 1750000);
+      }
+    })();
+  }, []);
 
   const { children } = props;
 
   const clickHandler = e => {
     e.preventDefault();
-    setMessage({
-      status: '',
-      title: '',
-    });
+    if (message.redirect === LOGIN) setUser(initialUser);
+    if (message.redirect) props.history.push(message.redirect);
+    setMessage(initialMessage);
   };
 
   return (
@@ -57,8 +86,8 @@ function AppLayout(props: PropsType) {
             title={message.title}
             className="message-result"
             extra={[
-              <Button type="primary" onClick={clickHandler}>
-                I understood
+              <Button key="btn" type="primary" onClick={clickHandler}>
+                {message.button}
               </Button>,
             ]}
           />
@@ -69,4 +98,4 @@ function AppLayout(props: PropsType) {
   );
 }
 
-export default AppLayout;
+export default withRouter(AppLayout);

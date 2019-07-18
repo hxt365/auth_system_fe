@@ -10,7 +10,7 @@ function ResetPassword() {
       <h2>We will send you an email containing new password</h2>
       <ResetPasswordForm />
       <Link className="reset-password__link" to={LOGIN}>
-        Remember out your password?
+        Remember your password?
       </Link>
     </section>
   );

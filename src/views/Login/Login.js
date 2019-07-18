@@ -7,7 +7,7 @@ function Login() {
   return (
     <section className="login">
       <img className="login__logo" src={Logo} alt="Teko's logo" />
-      <h1>Commin with us!</h1>
+      <h1>Come in with us!</h1>
       <LoginForm />
     </section>
   );
