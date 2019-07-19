@@ -29,6 +29,13 @@ function LoginForm(props: PropsType) {
             last_name: res.data.last_name,
             is_authenticated: true,
           });
+        } else if (res.response.status === 403) {
+          state.setMessage({
+            status: ERROR,
+            title: 'Please verify your account!',
+            button: 'I understood',
+            redirect: '',
+          });
         } else {
           state.setMessage({
             status: ERROR,
