@@ -7,41 +7,13 @@ import { AppContext } from 'components/AppLayout';
 import { SUCCESS, ERROR } from 'constants/message';
 import { authServices } from 'services';
 import { LOGIN } from 'constants/route';
-
-const formItemLayout = {
-  labelCol: {
-    sm: { span: 5 },
-  },
-  wrapperCol: {
-    sm: { span: 14 },
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    sm: {
-      span: 7,
-      offset: 8,
-    },
-  },
-};
-
-const firstNameItemLayout = {
-  labelCol: {
-    sm: { span: 10 },
-  },
-  wrapperCol: {
-    sm: { span: 13 },
-  },
-};
-
-const lastNameItemLayout = {
-  wrapperCol: {
-    sm: {
-      span: 14,
-    },
-  },
-};
+import { minLength, maxLength, containsValidCharacters, onlyLetters } from 'helpers/validator';
+import {
+  firstNameItemLayout,
+  lastNameItemLayout,
+  tailFormItemLayout,
+  formItemLayout,
+} from './Layout';
 
 type PropsType = {
   form: any,
@@ -99,6 +71,29 @@ function SignupForm(props: PropsType) {
     callback();
   };
 
+  const validateUsername = (rule, value, callback) => {
+    if (value) {
+      if (!containsValidCharacters(value))
+        callback('Username may contain only letters, numbers, and @/./+/-/_ characters');
+      if (!minLength(value, 6)) callback('Ensure username has at least 6 characters');
+      if (!maxLength(value, 150)) callback('Ensure username has no more than 150 characters');
+    }
+    callback();
+  };
+
+  const validatePassword = (rule, value, callback) => {
+    if (value) {
+      if (!minLength(value, 6)) callback('Ensure password has at least 6 characters');
+      if (!maxLength(value, 128)) callback('Ensure password has no more than 128 characters');
+    }
+    callback();
+  };
+
+  const validateName = (rule, value, callback) => {
+    if (value && !onlyLetters(value)) callback('Invalid name');
+    callback();
+  };
+
   const { form } = props;
   const { getFieldDecorator } = form;
 
@@ -107,12 +102,18 @@ function SignupForm(props: PropsType) {
       <Row type="flex" className="row">
         <Form.Item label="Name" {...firstNameItemLayout}>
           {getFieldDecorator('first_name', {
-            rules: [{ required: true, message: 'Please input your first name!', whitespace: true }],
+            rules: [
+              { required: true, message: 'Please input your first name!', whitespace: true },
+              { validator: validateName },
+            ],
           })(<Input placeholder="First name" />)}
         </Form.Item>
         <Form.Item {...lastNameItemLayout}>
           {getFieldDecorator('last_name', {
-            rules: [{ required: true, message: 'Please input your last name!', whitespace: true }],
+            rules: [
+              { required: true, message: 'Please input your last name!', whitespace: true },
+              { validator: validateName },
+            ],
           })(<Input placeholder="Last name" />)}
         </Form.Item>
       </Row>
@@ -126,9 +127,13 @@ function SignupForm(props: PropsType) {
             </Tooltip>
           </span>
         }
+        hasFeedback
       >
         {getFieldDecorator('username', {
-          rules: [{ required: true, message: 'Please input your username!' }],
+          rules: [
+            { required: true, message: 'Please input your username!' },
+            { validator: validateUsername },
+          ],
         })(<Input />)}
       </Form.Item>
       <Form.Item label="E-mail">
@@ -148,12 +153,12 @@ function SignupForm(props: PropsType) {
       <Form.Item label="Password" hasFeedback>
         {getFieldDecorator('password', {
           rules: [
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
+            { required: true, message: 'Please input your password!' },
             {
               validator: validateToNextPassword,
+            },
+            {
+              validator: validatePassword,
             },
           ],
         })(<Input.Password />)}

@@ -8,24 +8,8 @@ import { AppContext } from 'components/AppLayout';
 import { SUCCESS, ERROR } from 'constants/message';
 import { authServices } from 'services';
 import { LOGIN } from 'constants/route';
-
-const formItemLayout = {
-  labelCol: {
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    sm: { span: 12 },
-  },
-};
-
-const tailFormItemLayout = {
-  wrapperCol: {
-    sm: {
-      span: 3,
-      offset: 10,
-    },
-  },
-};
+import { minLength, maxLength } from 'helpers/validator';
+import { formItemLayout, tailFormItemLayout } from './Layout';
 
 type PropsType = {
   form: any,
@@ -49,7 +33,6 @@ function ChangePasswordForm(props: PropsType) {
             redirect: LOGIN,
           });
         } else {
-          console.log(res.response.data);
           state.setMessage({
             status: ERROR,
             title: res.response.data.non_field_errors,
@@ -83,6 +66,14 @@ function ChangePasswordForm(props: PropsType) {
     callback();
   };
 
+  const validatePassword = (rule, value, callback) => {
+    if (value) {
+      if (!minLength(value, 6)) callback('Ensure password has at least 6 characters');
+      if (!maxLength(value, 128)) callback('Ensure password has no more than 128 characters');
+    }
+    callback();
+  };
+
   const { form } = props;
   const { getFieldDecorator, getFieldsError } = form;
 
@@ -107,6 +98,9 @@ function ChangePasswordForm(props: PropsType) {
             },
             {
               validator: validateToNextPassword,
+            },
+            {
+              validator: validatePassword,
             },
           ],
         })(<Input.Password />)}
