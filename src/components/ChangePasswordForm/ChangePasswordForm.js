@@ -8,7 +8,8 @@ import { AppContext } from 'components/AppLayout';
 import { SUCCESS, ERROR } from 'constants/message';
 import { authServices } from 'services';
 import { LOGIN } from 'constants/route';
-import { minLength, maxLength } from 'helpers/validator';
+import { minLength, maxLength } from 'validators';
+import { changePasswordFormType } from 'type';
 import { formItemLayout, tailFormItemLayout } from './Layout';
 
 type PropsType = {
@@ -20,27 +21,37 @@ function ChangePasswordForm(props: PropsType) {
 
   const [dirty, setDirty] = useState(false);
 
+  const { form } = props;
+  const { getFieldDecorator, getFieldsError } = form;
+
+  const changePassword = async (data: changePasswordFormType) => {
+    const res = await authServices.changePassword(data);
+    if (res.status === 200) {
+      state.setMessage({
+        status: SUCCESS,
+        title: 'We changed password for you. Please log in again for security!',
+        button: 'Thank you, admin!',
+        redirect: LOGIN,
+      });
+    } else {
+      state.setMessage({
+        status: ERROR,
+        title: res.response.data.non_field_errors,
+        button: 'Let me try again',
+        redirect: '',
+      });
+    }
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
-    props.form.validateFields(async (err, values) => {
-      if (!err) {
-        const res = await authServices.changePassword(values);
-        if (res.status === 200) {
-          state.setMessage({
-            status: SUCCESS,
-            title: 'We changed password for you. Please log in again for security!',
-            button: 'Thank you, admin!',
-            redirect: LOGIN,
-          });
-        } else {
-          state.setMessage({
-            status: ERROR,
-            title: res.response.data.non_field_errors,
-            button: 'Let me try again',
-            redirect: '',
-          });
-        }
-      }
+    props.form.validateFields((err, values) => {
+      if (!err)
+        changePassword({
+          old_pass: values.current_password,
+          new_pass: values.password,
+          new_pass_2: values.confirm,
+        });
     });
   };
 
@@ -50,7 +61,6 @@ function ChangePasswordForm(props: PropsType) {
   };
 
   const compareToFirstPassword = (rule, value, callback) => {
-    const { form } = props;
     if (value && value !== form.getFieldValue('password')) {
       callback('Two passwords that you enter are inconsistent!');
     } else {
@@ -59,7 +69,6 @@ function ChangePasswordForm(props: PropsType) {
   };
 
   const validateToNextPassword = (rule, value, callback) => {
-    const { form } = props;
     if (value && dirty) {
       form.validateFields(['confirm'], { force: true });
     }
@@ -73,9 +82,6 @@ function ChangePasswordForm(props: PropsType) {
     }
     callback();
   };
-
-  const { form } = props;
-  const { getFieldDecorator, getFieldsError } = form;
 
   return (
     <Form {...formItemLayout} onSubmit={handleSubmit} className="change-password-form">
@@ -119,7 +125,12 @@ function ChangePasswordForm(props: PropsType) {
         })(<Input.Password onBlur={handleConfirmBlur} />)}
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
+        <Button
+          type="primary"
+          onClick={handleSubmit}
+          id="change-form__button"
+          disabled={hasErrors(getFieldsError())}
+        >
           Change password
         </Button>
       </Form.Item>

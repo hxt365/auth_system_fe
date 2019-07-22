@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test Home test snapshot 1`] = `
+<section
+  className="home"
+>
+  <OriginResult
+    icon={
+      <Icon
+        className="home__result"
+        theme="twoTone"
+        type="smile"
+      />
+    }
+    status="info"
+    title="Great, abc xyz! 
+        We are here together."
+  />
+</section>
+`;

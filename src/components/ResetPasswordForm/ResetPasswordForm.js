@@ -8,6 +8,7 @@ import { hasErrors } from 'helpers/component';
 import { AppContext } from 'components/AppLayout';
 import { SUCCESS, ERROR } from 'constants/message';
 import { HOME } from 'constants/route';
+import { resetPasswordType } from 'type';
 
 type PropsType = {
   form: any,
@@ -21,32 +22,38 @@ function ResetPasswordForm(props: PropsType) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    props.form.validateFields(async (err, values) => {
-      if (!err) {
-        const res = await authServices.resetPassword(values);
-        if (res.status === 200) {
-          state.setMessage({
-            status: SUCCESS,
-            title: 'Please check your mail box!',
-            button: 'Thank you, admin!',
-            redirect: HOME,
-          });
-        } else {
-          state.setMessage({
-            status: ERROR,
-            title: 'Please enter your own username and email!',
-            button: 'Let me try again',
-            redirect: '',
-          });
-        }
-      }
-    });
-  };
-
   const { form } = props;
   const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = form;
+
+  const resetPassword = async (data: resetPasswordType) => {
+    const res = await authServices.resetPassword(data);
+    if (res.status === 200) {
+      state.setMessage({
+        status: SUCCESS,
+        title: 'Please check your mail box!',
+        button: 'Thank you, admin!',
+        redirect: HOME,
+      });
+    } else {
+      state.setMessage({
+        status: ERROR,
+        title: 'Please enter your own username and email!',
+        button: 'Let me try again',
+        redirect: '',
+      });
+    }
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    props.form.validateFields((err, values) => {
+      if (!err)
+        resetPassword({
+          username: values.username,
+          email: values.email,
+        });
+    });
+  };
 
   // Only show error after a field is touched.
   const usernameError = isFieldTouched('username') && getFieldError('username');
@@ -78,8 +85,13 @@ function ResetPasswordForm(props: PropsType) {
         )}
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
-          Log in
+        <Button
+          type="primary"
+          onClick={handleSubmit}
+          id="reset-form__button"
+          disabled={hasErrors(getFieldsError())}
+        >
+          Get password
         </Button>
       </Form.Item>
     </Form>

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test HomeLayout test snapshot 1`] = `
+<Adapter
+  className="homelayout"
+>
+  <Adapter
+    style={
+      Object {
+        "position": "fixed",
+        "width": "100%",
+        "zIndex": 1,
+      }
+    }
+  >
+    <div
+      className="logo"
+    >
+      <img
+        alt="Teko's logo"
+        src="logo.png"
+      />
+    </div>
+    <Navigation />
+  </Adapter>
+  <Adapter
+    className="content"
+  >
+    <div
+      className="wrapper"
+    />
+  </Adapter>
+  <Adapter
+    style={
+      Object {
+        "textAlign": "center",
+      }
+    }
+  >
+    HXT365 @Teko2019
+  </Adapter>
+</Adapter>
+`;

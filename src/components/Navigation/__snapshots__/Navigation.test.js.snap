@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test navigation test snapshot 1`] = `
+<Menu
+  defaultSelectedKeys={
+    Array [
+      "/",
+    ]
+  }
+  mode="horizontal"
+  style={
+    Object {
+      "float": "right",
+      "lineHeight": "6.4rem",
+    }
+  }
+  theme="dark"
+>
+  <MenuItem
+    key="/"
+  >
+    <Link
+      to="/"
+    >
+      Home
+    </Link>
+  </MenuItem>
+  <MenuItem
+    key="/password/change"
+  >
+    <Link
+      to="/password/change"
+    >
+      Change password
+    </Link>
+  </MenuItem>
+  <MenuItem
+    key="/login"
+  >
+    <Link
+      onClick={[Function]}
+      to="/login"
+    >
+      Logout
+    </Link>
+  </MenuItem>
+</Menu>
+`;

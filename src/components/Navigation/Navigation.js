@@ -12,8 +12,8 @@ function Navigation() {
     authServices.logout();
     state.setUser({
       username: '',
-      first_name: '',
-      last_name: '',
+      firstName: '',
+      lastName: '',
       is_authenticated: false,
     });
   };
@@ -23,7 +23,7 @@ function Navigation() {
       theme="dark"
       mode="horizontal"
       defaultSelectedKeys={[HOME]}
-      style={{ lineHeight: '64px', float: 'right' }}
+      style={{ lineHeight: '6.4rem', float: 'right' }}
     >
       <Menu.Item key={HOME}>
         <Link to={HOME}>Home</Link>

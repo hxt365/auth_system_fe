@@ -7,7 +7,8 @@ import { AppContext } from 'components/AppLayout';
 import { SUCCESS, ERROR } from 'constants/message';
 import { authServices } from 'services';
 import { LOGIN } from 'constants/route';
-import { minLength, maxLength, containsValidCharacters, onlyLetters } from 'helpers/validator';
+import { minLength, maxLength, containsValidCharacters, onlyLetters } from 'validators';
+import { signupFormType } from 'type';
 import {
   firstNameItemLayout,
   lastNameItemLayout,
@@ -24,28 +25,42 @@ function SignupForm(props: PropsType) {
 
   const [dirty, setDirty] = useState(false);
 
+  const { form } = props;
+  const { getFieldDecorator } = form;
+
+  const signup = async (data: signupFormType) => {
+    const res = await authServices.signup(data);
+    if (res.status === 201) {
+      state.setMessage({
+        status: SUCCESS,
+        title:
+          // eslint-disable-next-line max-len
+          'You successfully registered! We sent you an verification email, just check it out nowwwww',
+        button: 'Thank you, admin!',
+        redirect: LOGIN,
+      });
+    } else {
+      state.setMessage({
+        status: ERROR,
+        title: 'Username or email was taken',
+        button: 'Let me try again',
+        redirect: '',
+      });
+    }
+  };
+
   const handleSubmit = e => {
     e.preventDefault();
-    props.form.validateFields(async (err, values) => {
-      if (!err) {
-        const res = await authServices.signup(values);
-        if (res.status === 201) {
-          state.setMessage({
-            status: SUCCESS,
-            title:
-              'You successfully registered! We sent you an verification email, just check it out nowwwww',
-            button: 'Thank you, admin!',
-            redirect: LOGIN,
-          });
-        } else {
-          state.setMessage({
-            status: ERROR,
-            title: 'Username or email was taken',
-            button: 'Let me try again',
-            redirect: '',
-          });
-        }
-      }
+    props.form.validateFields((err, values) => {
+      if (!err)
+        signup({
+          username: values.username,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          password: values.password,
+          password_2: values.confirm,
+        });
     });
   };
 
@@ -55,7 +70,6 @@ function SignupForm(props: PropsType) {
   };
 
   const compareToFirstPassword = (rule, value, callback) => {
-    const { form } = props;
     if (value && value !== form.getFieldValue('password')) {
       callback('Two passwords that you enter are inconsistent!');
     } else {
@@ -64,7 +78,6 @@ function SignupForm(props: PropsType) {
   };
 
   const validateToNextPassword = (rule, value, callback) => {
-    const { form } = props;
     if (value && dirty) {
       form.validateFields(['confirm'], { force: true });
     }
@@ -90,18 +103,19 @@ function SignupForm(props: PropsType) {
   };
 
   const validateName = (rule, value, callback) => {
-    if (value && !onlyLetters(value)) callback('Invalid name');
+    if (value) {
+      if (!onlyLetters(value)) callback('Invalid name');
+      if (!maxLength(value, 15))
+        callback('Ensure first nam/ last name has no more than 15 characters');
+    }
     callback();
   };
-
-  const { form } = props;
-  const { getFieldDecorator } = form;
 
   return (
     <Form {...formItemLayout} onSubmit={handleSubmit} className="signup-form">
       <Row type="flex" className="row">
         <Form.Item label="Name" {...firstNameItemLayout}>
-          {getFieldDecorator('first_name', {
+          {getFieldDecorator('firstName', {
             rules: [
               { required: true, message: 'Please input your first name!', whitespace: true },
               { validator: validateName },
@@ -109,7 +123,7 @@ function SignupForm(props: PropsType) {
           })(<Input placeholder="First name" />)}
         </Form.Item>
         <Form.Item {...lastNameItemLayout}>
-          {getFieldDecorator('last_name', {
+          {getFieldDecorator('lastName', {
             rules: [
               { required: true, message: 'Please input your last name!', whitespace: true },
               { validator: validateName },
@@ -189,7 +203,12 @@ function SignupForm(props: PropsType) {
         )}
       </Form.Item>
       <Form.Item {...tailFormItemLayout}>
-        <Button type="primary" htmlType="submit" disabled={!form.getFieldValue('agreement')}>
+        <Button
+          type="primary"
+          onClick={handleSubmit}
+          id="signup-form__button"
+          disabled={!form.getFieldValue('agreement')}
+        >
           Register
         </Button>
       </Form.Item>

@@ -11,7 +11,7 @@ import { LOGIN } from 'constants/route';
 const COUNTDOWN = parseInt(process.env.REACT_APP_COUNTDOWN, 10);
 
 type PropsType = {
-  children: any,
+  children: React.ReactElement,
   history: any,
 };
 
@@ -26,8 +26,8 @@ type MessageType = {
 // eslint-disable-next-line no-unused-vars
 type UserType = {
   username: String,
-  first_name: String,
-  last_name: String,
+  firstName: String,
+  lastName: String,
   is_authenticated: String,
 };
 
@@ -42,8 +42,8 @@ const initialMessage = {
 
 const initialUser = {
   username: '',
-  first_name: '',
-  last_name: '',
+  firstName: '',
+  lastName: '',
   is_authenticated: '',
 };
 
@@ -58,8 +58,8 @@ function AppLayout(props: PropsType) {
       if (res.status === 200) {
         setUser({
           username: res.data.username,
-          first_name: res.data.first_name,
-          last_name: res.data.last_name,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
           is_authenticated: true,
         });
       }

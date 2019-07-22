@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test Login test snapshot 1`] = `
+<section
+  className="login"
+>
+  <img
+    alt="Teko's logo"
+    className="login__logo"
+    src="logo.png"
+  />
+  <h1>
+    Come in with us!
+  </h1>
+  <Form(LoginForm) />
+</section>
+`;

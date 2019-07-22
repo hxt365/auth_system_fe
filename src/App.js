@@ -12,6 +12,7 @@ import {
 import Spinner from 'components/share/Spinner';
 import AppLayout from 'components/AppLayout';
 import PrivateRoute from 'components/share/PrivateRoute';
+import ErrorBoundary from 'components/ErrorBoundary';
 
 const Login = lazy(() => import('views/Login'));
 const Home = lazy(() => import('views/Home'));
@@ -23,26 +24,28 @@ const ConfirmEmail = lazy(() => import('views/ConfirmEmail'));
 
 function App() {
   return (
-    <AppLayout>
-      <React.Suspense fallback={<Spinner />}>
-        <Switch>
-          <PrivateRoute exact path={LOGIN} component={Login} />
-          <PrivateRoute exact path={SIGNUP} component={Signup} />
-          <PrivateRoute exact path={RESET_PASSWORD} component={ResetPassword} />
-          <PrivateRoute exact path={CONFIRM_EMAIL} component={ConfirmEmail} />
-          <HomeLayout>
-            <React.Suspense fallback={<Spinner />}>
-              <Switch>
-                <PrivateRoute authRoute exact path={HOME} component={Home} />
-                <PrivateRoute authRoute exact path={CHANGE_PASSWORD} component={ChangePassword} />
-                <Redirect to={HOME} />
-              </Switch>
-            </React.Suspense>
-          </HomeLayout>
-          <Redirect to={LOGIN} />
-        </Switch>
-      </React.Suspense>
-    </AppLayout>
+    <ErrorBoundary>
+      <AppLayout>
+        <React.Suspense fallback={<Spinner />}>
+          <Switch>
+            <PrivateRoute exact path={LOGIN} component={Login} />
+            <PrivateRoute exact path={SIGNUP} component={Signup} />
+            <PrivateRoute exact path={RESET_PASSWORD} component={ResetPassword} />
+            <PrivateRoute exact path={CONFIRM_EMAIL} component={ConfirmEmail} />
+            <HomeLayout>
+              <React.Suspense fallback={<Spinner />}>
+                <Switch>
+                  <PrivateRoute authRoute exact path={HOME} component={Home} />
+                  <PrivateRoute authRoute exact path={CHANGE_PASSWORD} component={ChangePassword} />
+                  <Redirect to={HOME} />
+                </Switch>
+              </React.Suspense>
+            </HomeLayout>
+            <Redirect to={LOGIN} />
+          </Switch>
+        </React.Suspense>
+      </AppLayout>
+    </ErrorBoundary>
   );
 }
 

@@ -7,7 +7,7 @@ import './HomeLayout.scss';
 import Logo from 'assets/pictures/logo.png';
 
 type PropsType = {
-  children: any,
+  children: React.ReactNode,
 };
 
 function HomeLayout(props: PropsType) {

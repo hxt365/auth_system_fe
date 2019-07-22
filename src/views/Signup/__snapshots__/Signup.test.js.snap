@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test Signup test snapshot 1`] = `
+<section
+  className="signup"
+>
+  <Link
+    className="signup__link"
+    to="/login"
+  >
+    Already have account?
+  </Link>
+   Or
+  <h2>
+    Just a minute..
+  </h2>
+  <Form(SignupForm) />
+</section>
+`;
