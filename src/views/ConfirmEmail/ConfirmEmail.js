@@ -30,13 +30,16 @@ function ConfirmEmail({ match }: { match: any }) {
         icon={<Icon type="safety-certificate" theme="twoTone" />}
         title="Congrats! We're glad you joined us!"
         extra={(
-<Button type="primary">
+          <Button type="primary">
             <Link to={LOGIN}>Log in</Link>
           </Button>
 )}
       />
     ) : (
-      <Result icon={<Icon type="bug" theme="twoTone" />} title="The token is not correct!" />
+      <Result
+        icon={<Icon type="bug" theme="twoTone" />}
+        title="The token is not correct or expired!"
+      />
     );
 
   return <section className="confirm-email">{view}</section>;

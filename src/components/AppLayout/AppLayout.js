@@ -90,11 +90,13 @@ function AppLayout(props: PropsType) {
             status={message.status}
             title={message.title}
             className="message-result"
-            extra={[
-              <Button key="btn" type="primary" onClick={clickHandler}>
-                {message.button}
-              </Button>,
-            ]}
+            extra={
+              message.button ? (
+                <Button key="btn" type="primary" onClick={clickHandler}>
+                  {message.button}
+                </Button>
+              ) : null
+            }
           />
         </Modal>
       ) : null}

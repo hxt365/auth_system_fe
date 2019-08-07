@@ -55,8 +55,8 @@ function SignupForm(props: PropsType) {
       if (!err)
         signup({
           username: values.username,
-          firstName: values.firstName,
-          lastName: values.lastName,
+          first_name: values.firstName,
+          last_name: values.lastName,
           email: values.email,
           password: values.password,
           password_2: values.confirm,

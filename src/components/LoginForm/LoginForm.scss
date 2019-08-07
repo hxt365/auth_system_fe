@@ -13,4 +13,11 @@
   &__float-left {
     float: left;
   }
+
+  .captcha {
+    & > div > div {
+      margin: auto;
+    }
+    margin-bottom: 1rem;
+  }
 }

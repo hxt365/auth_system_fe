@@ -3,6 +3,7 @@
 type loginFormType = {|
   username: String,
   passwrod: String,
+  captcha: ?String,
 |};
 
 type resetPasswordType = {|

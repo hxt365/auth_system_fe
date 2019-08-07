@@ -28,6 +28,7 @@ describe('Testing login feature', () => {
     expect(passwordInput).toHaveLength(1);
     const username = 'username';
     const password = 'password';
+    const captcha = null;
     usernameInput.simulate('change', { target: { value: username } });
     passwordInput.simulate('change', { target: { value: password } });
     const btn = wrapper.find('button.login-form__button');
@@ -37,6 +38,7 @@ describe('Testing login feature', () => {
     expect(loginSpy).toHaveBeenCalledWith({
       username,
       password,
+      captcha,
     });
     loginSpy.mockClear();
     wrapper.unmount();
